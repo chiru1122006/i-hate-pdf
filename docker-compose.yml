@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  word-to-pdf:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+    volumes:
+      # Optional: persist uploads (not recommended for production)
+      # - ./uploads:/app/uploads
+      # - ./outputs:/app/outputs
+      - type: tmpfs
+        target: /app/uploads
+      - type: tmpfs
+        target: /app/outputs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M

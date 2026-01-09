@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word to PDF Converter</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Main App Container -->
+        <div class="app-wrapper">
+            <!-- Header -->
+            <header class="header">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Word to PDF</span>
+                </div>
+            </header>
+
+            <!-- Upload State -->
+            <div id="upload-state" class="state active">
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" id="file-input" accept=".docx,.doc" hidden>
+                    
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="17,8 12,3 7,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        
+                        <h2 class="upload-title">Upload Word File</h2>
+                        <p class="upload-subtitle">.docx or .doc files only</p>
+                        
+                        <div class="upload-actions">
+                            <button class="btn btn-primary" id="browse-btn">
+                                <span>Browse Files</span>
+                            </button>
+                            <p class="drop-hint">or drag and drop here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Converting State -->
+            <div id="converting-state" class="state">
+                <div class="converting-content">
+                    <div class="spinner-container">
+                        <div class="spinner">
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-ring"></div>
+                        </div>
+                    </div>
+                    
+                    <h2 class="converting-title">Converting your file…</h2>
+                    <p class="converting-subtitle" id="file-name-display">document.docx</p>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span class="progress-text" id="progress-text">Processing...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete State -->
+            <div id="complete-state" class="state">
+                <div class="complete-content">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    
+                    <h2 class="complete-title">Conversion Complete!</h2>
+                    <p class="complete-subtitle" id="converted-file-name">document.pdf</p>
+                    <p class="complete-time" id="conversion-time">Converted in 2.5 seconds</p>
+                    
+                    <div class="complete-actions">
+                        <a href="#" class="btn btn-primary btn-download" id="download-btn">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Download PDF</span>
+                        </a>
+                        <button class="btn btn-secondary" id="convert-another-btn">
+                            Convert Another
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="state">
+                <div class="error-content">
+                    <div class="error-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <line x1="15" y1="9" x2="9" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="9" y1="9" x2="15" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    
+                    <h2 class="error-title">Conversion Failed</h2>
+                    <p class="error-message" id="error-message">An error occurred during conversion.</p>
+                    
+                    <button class="btn btn-primary" id="try-again-btn">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Fast, secure, and free. Files are automatically deleted after 5 minutes.</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
